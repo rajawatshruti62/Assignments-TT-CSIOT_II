@@ -30,6 +30,21 @@ void insertatend(node** head,int item){
 		
 	}
 }
+//insert in between
+void insertinbetween(int item,node **head,int after){
+	node *ptr;
+	ptr=(node*)malloc(sizeof(node));
+	ptr->data=item;
+	ptr->address=NULL;
+	node *s;
+	s=*head;
+	while(s->data!=after){
+		s=s->address;
+	}
+	ptr->address=s->address;
+	s->address=NULL;
+}
+
 //to display all elements of linked list
 void display(node *head){
 	if(head==NULL){
@@ -74,19 +89,33 @@ void deleteatend(node **head){
 		printf("\n Deleted Value=%d",ptr->data);
 		free(ptr);
 }
-//search an item
-node* search(node *head,int key){
-	while(head!=NULL && head->data!=key){
-		head=head->address;
+
+//finding kth element from end of the linked list
+int kthelement(node **head,int k){
+	k=k-1;
+	node *s,*t;
+	s=*head;
+	t=*head;
+	while(k>0){
+		t=t->address;
+		k--;
 	}
-	return head;
+	while(t->address!=NULL){
+		s=s->address;
+		t=t->address;
+	}
+	return s->data;
 }
-//to display elements in reverse order
-void displayinreverse(node *head){
-	if(head->address!=NULL){
-		displayinreverse(head->address);
+//finding middle element of a linked list
+int middle(node **head){
+	node *s,*t;
+	s=*head;
+	t=*head;
+	while(t!=NULL && t->address!=NULL && (t->address)->address!=NULL){
+		s=s->address;
+		t=(t->address)->address;
 	}
-	printf("%d->",head->data);
+	return s->data;
 }
 int main(){
 	int item,choice;
@@ -96,11 +125,12 @@ int main(){
 		printf("\n_______LINKED LIST________\n");
 		printf("\n1.Insert at beg");
 		printf("\n2.Insert at end");
-		printf("\n3.Delete at beg");
-		printf("\n4.Delete at end");
-		printf("\n5.Display all elements in order");
-		printf("\n6.Display in reverse order");
-		printf("\n7.EXIT");
+		printf("\n3.Insert at specific position (after)");
+		printf("\n4.Delete at beg");
+		printf("\n5.Delete at end");
+		printf("\n6.Display all elements in order");
+		printf("\n7.Finding kth element");
+		printf("\n8.finding middle element");
 		printf("\nEnter your choice:");
 		scanf("%d",&choice);
 		switch(choice){
@@ -115,17 +145,27 @@ int main(){
 				insertatend(&head,item);
 				break;
 			case 3:
-				deleteatbeg(&head);
+				printf("Enter item:");
+				scanf("%d",&item);
+				int after;
+				scanf("%d",&after);
+				insertinbetween(item,&head,after);
 				break;
 			case 4:
-				deleteatend(&head);
+				deleteatbeg(&head);
 				break;
 			case 5:
-				display(head);
+				deleteatend(&head);
 				break;
 			case 6:
-				displayinreverse(head);
+				display(head);
 				break;
+			case 7:
+				int k;
+				scanf("%d",&k);
+				printf("%d",kthelement(&head,k));
+			case 8:
+				printf("%d",middle(&head));
 			default:
 				exit(1);
 		}
